@@ -2,6 +2,26 @@
 import { ref } from 'vue'
 
 const modalHandler = ref(false)
+
+const textValue = ref('')
+
+interface Card {
+  text: string
+  date: string
+  id: number
+}
+const cards = ref<Card[]>([])
+
+// console.log(textValue)
+function addToCards() {
+  cards.value.push({
+    text: textValue.value,
+    date: new Date().toDateString().toLocaleString(),
+    id: Math.floor(Math.random() * 5)
+  })
+  textValue.value = ''
+  modalHandler.value = false
+}
 </script>
 
 <template>
@@ -10,8 +30,8 @@ const modalHandler = ref(false)
     <div v-if="modalHandler" class="overlay">
       <div class="modal">
         <button @click="modalHandler = false" class="close">X</button>
-        <textarea name="" id="" cols="30" rows="10"></textarea>
-        <button>Add note</button>
+        <textarea v-model="textValue" name="" id="" cols="30" rows="10"></textarea>
+        <button @click="addToCards">Add note</button>
       </div>
     </div>
     <div class="container">
@@ -19,13 +39,12 @@ const modalHandler = ref(false)
         <h1>Notes {{ modalHandler }}</h1>
         <button @click="modalHandler = true">+</button>
       </header>
-      <div class="cards__container">
+      <div v-for="card in cards" :key="card.id" class="cards__container">
         <div class="card">
           <p class="main__text">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt tempore id eos est,
-            non iusto!
+            {{ card.text }}
           </p>
-          <p class="date">1-1-2020</p>
+          <p class="date">{{ card.date }}</p>
         </div>
       </div>
     </div>
